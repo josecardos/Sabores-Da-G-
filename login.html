@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Sabores da Gê</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Usa o mesmo CSS da página de cadastro -->
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+  <main class="card">
+
+    <header class="brand">
+      <!-- Se o grupo tiver o logo em arquivo, troque este bloco por:
+           <img src="logo.png" alt="Sabores da Gê - comida caseira" class="logo"> -->
+      <h1 class="brand-title">Sabores <span>da</span> Gê</h1>
+      <p class="ribbon">comida caseira</p>
+    </header>
+
+    <h2 class="page-title">Entrar na sua conta</h2>
+    <p class="subtitle">Que bom te ver por aqui! Digite seus dados para continuar.</p>
+
+    <form id="formLogin" novalidate>
+
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" autocomplete="email">
+        <small class="error" id="erro-email"></small>
+      </div>
+
+      <div class="field">
+        <label for="senha">Senha</label>
+        <div class="password-wrap">
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" autocomplete="current-password">
+          <button type="button" class="toggle-pass" data-target="senha" aria-label="Mostrar senha">Mostrar</button>
+        </div>
+        <small class="error" id="erro-senha"></small>
+      </div>
+
+      <button type="submit" class="btn">Entrar</button>
+
+      <p class="success" id="mensagem-sucesso" hidden></p>
+    </form>
+
+    <p class="login-link"><a href="#">Esqueceu a senha?</a></p>
+
+    <div class="divider"><span>ou</span></div>
+
+    <p class="register-text">Ainda não tem conta?</p>
+    <a href="index.html" class="btn btn-outline">Criar conta</a>
+
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>
