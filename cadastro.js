@@ -159,6 +159,7 @@ campos.senha.addEventListener("input", () => {
 form.addEventListener("submit", (evento) => {
   evento.preventDefault();
 
+
   const resultados = Object.keys(campos).map((nome) => validarCampo(nome));
   const tudoCerto = resultados.every(Boolean);
 
@@ -178,8 +179,15 @@ form.addEventListener("submit", (evento) => {
     email: campos.email.value.trim(),
     telefone: campos.telefone.value.replace(/\D/g, ""),
     senha: campos.senha.value,
+ 
   };
-
+const resultado = Storage.cadastrar(dados);
+  if (!resultado.ok) {
+    mostrarResultado("email", resultado.msg);
+    campos.email.focus();
+    msg.hidden = true;
+    return;
+  }
   // TODO (parte do grupo): enviar "dados" para o back-end, por exemplo:
   // fetch("/api/cadastro", {
   //   method: "POST",

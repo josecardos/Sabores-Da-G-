@@ -3,22 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#261100">
   <title>Cadastro | Sabores da Gê</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="cadastro.css">
-  <link rel="stylesheet" href="scripit.js">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="cadastro-page">
 
-  <main class="card">
+  <header class="menu-superior">
+    <a href="index.html" class="menu-superior-logo"><img src="img/ge.png" alt="" class="logo-ge">Sabores da Gê</a>
+    <nav class="menu-superior-links" aria-label="Menu principal">
+      <a href="index.html">Início</a>
+      <a href="index.html#sobre">Sobre nós</a>
+      <a href="index.html#contatos">Contatos</a>
+      <a href="cadastro.html" class="ativo">Cadastro</a>
+    </nav>
+  </header>
 
+  <main class="cadastro-card">
     <header class="brand">
-      <!-- Se o grupo tiver o logo em arquivo, troque este bloco por:
-           <img src="logo.png" alt="Sabores da Gê - comida caseira" class="logo"> -->
+      <img src="img/ge.png" alt="Gê, a cozinheira" class="brand-ge">
       <h1 class="brand-title">Sabores <span>da</span> Gê</h1>
       <p class="ribbon">comida caseira</p>
     </header>
@@ -27,10 +33,9 @@
     <p class="subtitle">Cadastre-se para fazer seus pedidos e receber as novidades do cardápio.</p>
 
     <form id="formCadastro" novalidate>
-
       <div class="field">
         <label for="nome">Nome completo</label>
-        <input type="text" id="nome" name="nome" placeholder="Ex.: Maria da Silva" autocomplete="name">
+        <input type="text" id="nome" name="nome" placeholder="Ex.: Dona Gê" autocomplete="name">
         <small class="error" id="erro-nome"></small>
       </div>
 
@@ -52,9 +57,7 @@
           <input type="password" id="senha" name="senha" placeholder="Mínimo de 8 caracteres" autocomplete="new-password">
           <button type="button" class="toggle-pass" data-target="senha" aria-label="Mostrar senha">Mostrar</button>
         </div>
-        <div class="strength" aria-hidden="true">
-          <span id="barra-forca"></span>
-        </div>
+        <div class="strength" aria-hidden="true"><span id="barra-forca"></span></div>
         <small class="hint" id="texto-forca"></small>
         <small class="error" id="erro-senha"></small>
       </div>
@@ -75,14 +78,14 @@
       </div>
 
       <button type="submit" class="btn">Cadastrar</button>
-
       <p class="success" id="mensagem-sucesso" hidden></p>
     </form>
 
     <p class="login-link">Já tem conta? <a href="login.html">Entrar</a></p>
-
   </main>
 
-  <script src="cadastro.js"></script>
+  <script src="cadastro.js" defer></script>
+  <script src="storage.js"></script>
+
 </body>
 </html>

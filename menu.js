@@ -1,185 +1,140 @@
-/* ============================================================
-   CONFIGURAÇÃO — mexa só aqui para trocar número, horário e preços
-   ============================================================ */
-const WHATSAPP = "5521999999999";   // ← troque pelo número real da Gê (55 + DDD + número)
-const ABRE = 11, FECHA = 15;        // horário de funcionamento (Seg a Sex)
+// ==========================================================
+// Sabores da Gê – cardápio, carrinho, tema e status da loja
+// ==========================================================
+const WHATSAPP = "5521999999999";           // troque pelo número real
+const ABRE = 11, FECHA = 15;                // seg a sex, 11h às 15h
 
-const CARDAPIO = {
-    refeicoes: [
-        { id: "parmegiana", nome: "Parmegiana de frango", desc: "Refeição individual completa com frango parmegiana.", preco: 25.00, img: "parmegiana.jpeg" },
-        { id: "feijoada",   nome: "Feijoada",             desc: "Feijoada individual à moda da casa.",                  preco: 25.00, img: "feijoada.jpeg" },
-        { id: "bife",       nome: "Bife com fritas",      desc: "Bife com fritas individual completo.",                 preco: 35.00, img: "bifefritas.jpeg" },
-        { id: "carne",      nome: "Carne assada",         desc: "Carne assada individual completa.",                    preco: 20.00, img: "carneassada.jpeg" }
-    ],
-    bebidas: [
-        { id: "h2o",       nome: "Limoneto H2O",          preco: 5.00,  img: "h2o.jpeg" },
-        { id: "coca",      nome: "Coca-Cola 2L",          preco: 10.00, img: "coca.jpeg" },
-        { id: "sprite",    nome: "Sprite 2L",             preco: 9.00,  img: "sprite.jpeg" },
-        { id: "guarana",   nome: "Guaraná Antarctica 2L", preco: 9.00,  img: "guarana.jpeg" },
-        { id: "schweppes", nome: "Schweppes lata",        preco: 5.50,  img: "refresco.jpeg" },
-        { id: "guaracamp", nome: "Guaracamp",             preco: 3.00,  img: "guaracamp.jpeg" },
-        { id: "aguagas",   nome: "Água com gás",          preco: 3.00,  img: "aguacomgas.jpeg" }
-        // tem foto pronta de "aguasemgas.jpeg" — se vender, é só adicionar uma linha aqui
-    ],
-    sobremesas: [
-        { id: "pudim", nome: "Pudim",          preco: 3.50, img: "pudim.jpeg" },
-        { id: "torta", nome: "Torta de limão", preco: 3.50, img: "tortalimao.jpeg" }
-    ]
-};
+// Edite aqui o cardápio (id único, categoria, foto da pasta img/, nome, descrição, preço)
+const CARDAPIO = [
+  { id: "r1", cat: "refeicoes", img: "feijoada.jpeg", nome: "Feijoada completa", desc: "Feijão preto com carnes, arroz, couve, farofa, torresmo e laranja.", preco: 28 },
+  { id: "r2", cat: "refeicoes", img: "frangogrelhado.jpeg", nome: "Frango grelhado", desc: "Filé de frango na chapa, arroz, couve, farofa e vinagrete.", preco: 24 },
+  { id: "r3", cat: "refeicoes", img: "bifefritas.jpeg", nome: "Bife com fritas", desc: "Bife ao molho, batata frita, arroz, couve e torresmo.", preco: 26 },
+  { id: "r4", cat: "refeicoes", img: "carneassada.jpeg", nome: "Carne assada", desc: "Fatias de carne assada com arroz, couve, farofa e vinagrete.", preco: 27 },
+  { id: "r5", cat: "refeicoes", img: "parmegiana.jpeg", nome: "Parmegiana de frango", desc: "Empanado com molho, queijo e manjericão, arroz e farofa.", preco: 26 },
+  { id: "b1", cat: "bebidas", img: "coca.jpeg", nome: "Coca-Cola 2L", desc: "Sabor original.", preco: 14 },
+  { id: "b2", cat: "bebidas", img: "guarana.jpeg", nome: "Guaraná Antarctica 1,5L", desc: "O original do Brasil.", preco: 11 },
+  { id: "b3", cat: "bebidas", img: "sprite.jpeg", nome: "Sprite 2L", desc: "Sabor limão.", preco: 13 },
+  { id: "b4", cat: "bebidas", img: "h2o.jpeg", nome: "H2OH! Limoneto 600ml", desc: "Sabor limão, baixo em calorias.", preco: 7 },
+  { id: "b5", cat: "bebidas", img: "refresco.jpeg", nome: "Schweppes Citrus 350ml", desc: "Lata gelada.", preco: 6 },
+  { id: "b6", cat: "bebidas", img: "guaracamp.jpeg", nome: "Guaracamp 285ml", desc: "Copo de guaraná natural.", preco: 4 },
+  { id: "b7", cat: "bebidas", img: "aguasemgas.jpeg", nome: "Água sem gás 500ml", desc: "Água mineral Crystal.", preco: 3 },
+  { id: "b8", cat: "bebidas", img: "aguacomgas.jpeg", nome: "Água com gás 500ml", desc: "Água mineral Crystal.", preco: 3.5 },
+  { id: "s1", cat: "sobremesas", img: "pudim.jpeg", nome: "Pudim de leite", desc: "Fatia com calda de caramelo.", preco: 9 },
+  { id: "s2", cat: "sobremesas", img: "tortalimao.jpeg", nome: "Torta de limão", desc: "Fatia com chantilly e limão.", preco: 10 },
+];
 
-/* ============================================================ */
-const fmt = v => "R$ " + v.toFixed(2).replace(".", ",");
-const todos = [...CARDAPIO.refeicoes, ...CARDAPIO.bebidas, ...CARDAPIO.sobremesas];
-const porId = id => todos.find(i => i.id === id);
+const CHAVE_CARRINHO = "saboresDaGe.carrinho";
+const CHAVE_TEMA = "saboresDaGe.tema";
+let carrinho = {}; // { id: quantidade }
 
-let carrinho = {};  // { id: quantidade }
-try { carrinho = JSON.parse(localStorage.getItem("sg-carrinho")) || {}; } catch (e) {}
-const salvar = () => { try { localStorage.setItem("sg-carrinho", JSON.stringify(carrinho)); } catch (e) {} };
+const $ = (id) => document.getElementById(id);
+const moeda = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const ler = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 
-/* ---------- Render do cardápio ---------- */
-function cardHTML(item, tipo) {
-    const foto = `<img src="imagens/${item.img}" alt="${item.nome}" loading="lazy">`;
-    const acao = `<div class="acao" id="acao-${item.id}"></div>`;
-    if (tipo === "prato") {
-        return `<article class="card prato">${foto}
-            <div class="corpo">
-                <h3 class="nome">${item.nome}</h3>
-                <p class="desc">${item.desc}</p>
-                <div class="rodape"><span class="preco">${fmt(item.preco)}</span>${acao}</div>
-            </div></article>`;
-    }
-    return `<article class="card compacto">${foto}
-        <div class="corpo">
-            <h3 class="nome">${item.nome}</h3>
-            <div class="rodape"><span class="preco">${fmt(item.preco)}</span>${acao}</div>
-        </div></article>`;
+// ---------- Cardápio ----------
+function cartaoItem(p) {
+  const q = carrinho[p.id] || 0;
+  const acao = q === 0
+    ? `<button class="btn-add" onclick="mudarQtd('${p.id}',1)">Adicionar</button>`
+    : `<div class="qtd"><button aria-label="Remover um ${p.nome}" onclick="mudarQtd('${p.id}',-1)">−</button><span>${q}</span><button aria-label="Adicionar um ${p.nome}" onclick="mudarQtd('${p.id}',1)">+</button></div>`;
+  return `<article class="item"><img class="item-img" src="img/${p.img}" alt="${p.nome}" loading="lazy"><div class="item-corpo"><h3>${p.nome}</h3><p>${p.desc}</p><div class="item-rodape"><span class="preco">${moeda(p.preco)}</span>${acao}</div></div></article>`;
 }
 
 function renderCardapio() {
-    document.getElementById("lista-refeicoes").innerHTML  = CARDAPIO.refeicoes.map(i => cardHTML(i, "prato")).join("");
-    document.getElementById("lista-bebidas").innerHTML    = CARDAPIO.bebidas.map(i => cardHTML(i, "compacto")).join("");
-    document.getElementById("lista-sobremesas").innerHTML = CARDAPIO.sobremesas.map(i => cardHTML(i, "compacto")).join("");
-    todos.forEach(atualizarAcao);
+  ["refeicoes", "bebidas", "sobremesas"].forEach((cat) => {
+    $("lista-" + cat).innerHTML = CARDAPIO.filter((p) => p.cat === cat).map(cartaoItem).join("");
+  });
 }
 
-function atualizarAcao(item) {
-    const el = document.getElementById("acao-" + item.id);
-    const q = carrinho[item.id] || 0;
-    el.innerHTML = q === 0
-        ? `<button class="btn-pedir" onclick="alterar('${item.id}', 1)">Adicionar</button>`
-        : `<div class="qtd"><button onclick="alterar('${item.id}', -1)" aria-label="Menos">−</button><span>${q}</span><button onclick="alterar('${item.id}', 1)" aria-label="Mais">+</button></div>`;
+// ---------- Carrinho ----------
+function mudarQtd(id, delta) {
+  const nova = (carrinho[id] || 0) + delta;
+  if (nova <= 0) delete carrinho[id]; else carrinho[id] = nova;
+  atualizar();
 }
 
-/* ---------- Carrinho ---------- */
-function alterar(id, delta) {
-    const nova = (carrinho[id] || 0) + delta;
-    if (nova <= 0) delete carrinho[id]; else carrinho[id] = nova;
-    salvar();
-    atualizarAcao(porId(id));
-    atualizarCarrinhoUI();
+function itensDoCarrinho() {
+  return CARDAPIO.filter((p) => carrinho[p.id]).map((p) => ({ ...p, qtd: carrinho[p.id] }));
 }
 
-function totais() {
-    let qtd = 0, soma = 0;
-    for (const id in carrinho) { qtd += carrinho[id]; soma += carrinho[id] * porId(id).preco; }
-    return { qtd, soma };
+function atualizar() {
+  const itens = itensDoCarrinho();
+  const total = itens.reduce((s, i) => s + i.preco * i.qtd, 0);
+  const qtd = itens.reduce((s, i) => s + i.qtd, 0);
+
+  $("contador-itens").textContent = qtd;
+  $("valor-total").textContent = moeda(total);
+  $("modal-valor-total").textContent = moeda(total);
+  $("carrinho-bar").classList.toggle("visivel", qtd > 0);
+
+  $("lista-carrinho-modal").innerHTML = itens.length
+    ? itens.map((i) => `<li><span>${i.qtd}× ${i.nome}</span><b>${moeda(i.preco * i.qtd)}</b></li>`).join("")
+    : `<li class="vazio">Seu carrinho está vazio. Escolha um prato no cardápio.</li>`;
+
+  try { localStorage.setItem(CHAVE_CARRINHO, JSON.stringify(carrinho)); } catch (e) {}
+  renderCardapio();
+  if (!qtd) fecharCarrinho();
 }
 
-function atualizarCarrinhoUI() {
-    const { qtd, soma } = totais();
-    document.getElementById("contador-itens").innerText = qtd;
-    document.getElementById("valor-total").innerText = fmt(soma);
-    document.getElementById("modal-valor-total").innerText = fmt(soma);
-    document.getElementById("carrinho-bar").classList.toggle("vazio", qtd === 0);
+function abrirCarrinho() { $("modal-carrinho").classList.add("aberto"); }
+function fecharCarrinho() { $("modal-carrinho").classList.remove("aberto"); }
 
-    const lista = document.getElementById("lista-carrinho-modal");
-    const ids = Object.keys(carrinho);
-    if (ids.length === 0) {
-        lista.innerHTML = '<li class="vazio-msg">Seu carrinho está vazio 🍽️</li>';
-        return;
-    }
-    lista.innerHTML = ids.map(id => {
-        const it = porId(id), q = carrinho[id];
-        return `<li class="item-modal">
-            <div class="info"><b>${it.nome}</b><small>${fmt(it.preco)} cada · ${fmt(it.preco * q)}</small></div>
-            <div class="qtd"><button onclick="alterar('${id}', -1)" aria-label="Menos">−</button><span>${q}</span><button onclick="alterar('${id}', 1)" aria-label="Mais">+</button></div>
-        </li>`;
-    }).join("");
-}
-
-function abrirCarrinho()  { document.getElementById("modal-carrinho").style.display = "flex"; }
-function fecharCarrinho() { document.getElementById("modal-carrinho").style.display = "none"; }
-
-/* Salva o resumo do pedido e vai para a página de cadastro */
 function irParaCadastro() {
-    const ids = Object.keys(carrinho);
-    if (ids.length === 0) { alert("Seu carrinho está vazio!"); return; }
-
-    const pedido = {
-        itens: ids.map(id => {
-            const it = porId(id);
-            return { id, nome: it.nome, preco: it.preco, qtd: carrinho[id] };
-        }),
-        total: totais().soma,
-        obs: document.getElementById("obs").value.trim()
-    };
-    try { localStorage.setItem("sg-pedido", JSON.stringify(pedido)); } catch (e) {}
-    window.location.href = "cadastro.html";
+  if (!itensDoCarrinho().length) return;
+  try { localStorage.setItem("saboresDaGe.obs", $("obs").value); } catch (e) {}
+  window.location.href = "cadastro.html";
 }
 
 function finalizarPedido() {
-    const ids = Object.keys(carrinho);
-    if (ids.length === 0) { alert("Seu carrinho está vazio!"); return; }
-
-    let msg = "Olá, Gê! Gostaria de fazer o seguinte pedido:\n\n";
-    ids.forEach(id => {
-        const it = porId(id), q = carrinho[id];
-        msg += `• ${q}x ${it.nome} — ${fmt(it.preco * q)}\n`;
-    });
-    msg += `\n*Total: ${fmt(totais().soma)}*`;
-    const obs = document.getElementById("obs").value.trim();
-    if (obs) msg += `\n\nObservações: ${obs}`;
-
-    window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+  const itens = itensDoCarrinho();
+  if (!itens.length) return;
+  const total = itens.reduce((s, i) => s + i.preco * i.qtd, 0);
+  const obs = $("obs").value.trim();
+  let msg = "Olá, vim pelo site e gostaria de fazer um pedido:\n\n";
+  msg += itens.map((i) => `• ${i.qtd}x ${i.nome} – ${moeda(i.preco * i.qtd)}`).join("\n");
+  msg += `\n\n*Total: ${moeda(total)}*`;
+  if (obs) msg += `\n\nObservações: ${obs}`;
+  window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
 }
 
-/* ---------- Tema ---------- */
+// ---------- Tema claro / escuro ----------
 function alternarTema() {
-    const escuro = document.body.getAttribute("data-theme") !== "dark";
-    document.body.setAttribute("data-theme", escuro ? "dark" : "light");
-    document.getElementById("btn-theme").innerText = escuro ? "☀️" : "🌙";
-    try { localStorage.setItem("sg-tema", escuro ? "dark" : "light"); } catch (e) {}
+  const escuro = document.body.dataset.theme !== "dark";
+  aplicarTema(escuro ? "dark" : "light");
+  guardar(CHAVE_TEMA, escuro ? "dark" : "light");
 }
-try {
-    if (localStorage.getItem("sg-tema") === "dark") alternarTema();
-} catch (e) {}
+function aplicarTema(t) {
+  document.body.dataset.theme = t;
+  document.documentElement.dataset.theme = t;
+  $("btn-theme").textContent = t === "dark" ? "☀️" : "🌙";
+}
 
-/* ---------- Aberto / Fechado (Seg a Sex, 11h–15h) ---------- */
+// ---------- Aberto / fechado ----------
 function atualizarStatus() {
-    const agora = new Date();
-    const dia = agora.getDay(), h = agora.getHours();
-    const aberto = dia >= 1 && dia <= 5 && h >= ABRE && h < FECHA;
-    const el = document.getElementById("status");
-    el.classList.toggle("fechado", !aberto);
-    el.innerHTML = aberto
-        ? `<i class="bolinha"></i><b>Aberto agora</b> · até ${FECHA}h`
-        : `<i class="bolinha"></i><b>Fechado agora</b> · abrimos Seg a Sex às ${ABRE}h`;
+  const agora = new Date();
+  const dia = agora.getDay(), h = agora.getHours();
+  const aberto = dia >= 1 && dia <= 5 && h >= ABRE && h < FECHA;
+  const el = $("status");
+  el.className = "status " + (aberto ? "aberto" : "fechado");
+  el.querySelector("b").textContent = aberto ? "Aberto agora" : "Fechado agora";
 }
 
-/* ---------- Chip ativo conforme a rolagem ---------- */
-function observarSecoes() {
-    const chips = [...document.querySelectorAll(".chip")];
-    const obs = new IntersectionObserver(entradas => {
-        entradas.forEach(e => {
-            if (e.isIntersecting) {
-                chips.forEach(c => c.classList.toggle("ativo", c.getAttribute("href") === "#" + e.target.id));
-            }
-        });
-    }, { rootMargin: "-30% 0px -60% 0px" });
-    document.querySelectorAll("main section").forEach(s => obs.observe(s));
+// ---------- Categoria ativa ao rolar ----------
+function iniciarChips() {
+  const chips = document.querySelectorAll(".chip");
+  const obs = new IntersectionObserver((es) => {
+    es.forEach((e) => {
+      if (e.isIntersecting) chips.forEach((c) => c.classList.toggle("ativo", c.getAttribute("href") === "#" + e.target.id));
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  ["refeicoes", "bebidas", "sobremesas"].forEach((id) => obs.observe($(id)));
 }
 
-renderCardapio();
-atualizarCarrinhoUI();
+// ---------- Início ----------
+try { carrinho = JSON.parse(localStorage.getItem(CHAVE_CARRINHO)) || {}; } catch (e) { carrinho = {}; }
+aplicarTema(ler(CHAVE_TEMA) || "light");
 atualizarStatus();
-observarSecoes();
+setInterval(atualizarStatus, 60000);
+iniciarChips();
+atualizar();
